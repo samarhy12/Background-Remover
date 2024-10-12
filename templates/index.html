@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Title -->
+    <title>Raydex Background Remover - Free and Easy Online Tool</title>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Remove the background from your images quickly and easily with Raydex Background Remover. No installation required, 100% free online tool!"
+    />
+    <meta
+      name="keywords"
+      content="Background remover, image editor, background eraser, remove background from image, online tool, free background remover, AI image processing"
+    />
+    <meta name="author" content="Raydex Hub" />
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta
+      property="og:title"
+      content="Raydex Background Remover - Free Online Tool"
+    />
+    <meta
+      property="og:description"
+      content="Remove the background from any image in seconds with Raydex's free online background remover. Perfect for personal and professional use."
+    />
+    <meta
+      property="og:image"
+      content="{{url_for('static', filename='images/bg.png')}}"
+    />
+    <meta
+      property="og:url"
+      content="https://raydexhub.com/background-remover"
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Raydex Background Remover - Free and Easy Online Tool"
+    />
+    <meta
+      name="twitter:description"
+      content="Remove backgrounds from images with our easy-to-use, free online tool."
+    />
+    <meta
+      name="twitter:image"
+      content="{{url_for('static', filename='images/bg.png')}}"
+    />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="{{url_for('static', filename='images/favicon.ico')}}"
+      type="image/x-icon"
+    />
+
+    <!-- Manifest -->
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='manifest.json') }}"
+    />
+
+    <style>
+      :root {
+        --primary-color: #2ecc71;
+        --secondary-color: #27ae60;
+        --background-color: #f5f7fa;
+        --text-color: #333;
+        --border-radius: 8px;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background-color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar-logo {
+        height: 40px;
+      }
+
+      .explore-btn {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .explore-btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .explore-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .container {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 1000px;
+        width: 90%;
+        margin: 2rem auto;
+      }
+
+      h1 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+      }
+
+      #uploadForm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #imageInput {
+        display: none;
+      }
+
+      .btn {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0.5rem;
+      }
+
+      .btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .image-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 2rem;
+      }
+
+      .image-wrapper {
+        flex: 1 1 300px;
+        margin: 1rem;
+        text-align: center;
+      }
+
+      .image-wrapper img {
+        max-width: 100%;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .image-wrapper img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .controls {
+        background-color: #f0f4f8;
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .control-group {
+        display: flex;
+        align-items: center;
+        margin: 0.5rem;
+      }
+
+      .control-group span {
+        margin-right: 0.5rem;
+        font-weight: bold;
+      }
+
+      .color-preview {
+        width: 40px;
+        height: 40px;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .color-preview:hover {
+        transform: scale(1.1);
+      }
+
+      #bgColorPicker {
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+
+      #bgImageInput {
+        display: none;
+      }
+
+      .file-input-label {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 8px 16px;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .file-input-label:hover {
+        background-color: var(--primary-color);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .loader {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid var(--primary-color);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .checkered-background {
+        background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+          linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+          linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+        background-size: 20px 20px;
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      }
+
+      #tutorial {
+        background-color: #f0f4f8;
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      #tutorial h2 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      #tutorial ol {
+        padding-left: 1.5rem;
+      }
+
+      #tutorial li {
+        margin-bottom: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          width: 95%;
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .image-wrapper {
+          flex: 1 1 100%;
+        }
+
+        .controls {
+          flex-direction: column;
+        }
+
+        .control-group {
+          margin: 1rem 0;
+        }
+
+        .navbar {
+          flex-direction: column;
+          padding: 1rem;
+        }
+
+        .explore-btn {
+          margin-top: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <img
+        src="{{url_for('static', filename='images/bg.png')}}"
+        alt="Raydex Logo"
+        class="navbar-logo"
+      />
+      <a href="https://raydexhub.com" class="explore-btn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        Explore Other Tools
+      </a>
+    </nav>
+
+    <div class="container">
+      <h1>Raydex Background Remover</h1>
+      <form id="uploadForm">
+        <input type="file" id="imageInput" accept="image/*" />
+        <label for="imageInput" class="btn">Choose Image</label>
+        <button type="submit" id="removeButton" class="btn hidden">
+          Remove Background
+        </button>
+      </form>
+      <div id="loader" class="loader hidden"></div>
+      <div class="image-container">
+        <div class="image-wrapper">
+          <img id="imagePreview" class="hidden" alt="Image preview" />
+        </div>
+        <div class="image-wrapper">
+          <div id="resultWrapper" class="checkered-background hidden">
+            <img id="resultImage" alt="Result image" />
+          </div>
+        </div>
+      </div>
+      <div id="backgroundControls" class="controls hidden">
+        <div class="control-group">
+          <span>Background Color:</span>
+          <div class="color-preview" id="colorPreview"></div>
+          <input type="color" id="bgColorPicker" value="#ffffff" />
+        </div>
+        <div class="control-group">
+          <span>Or use image:</span>
+          <input type="file" id="bgImageInput" accept="image/*" />
+          <label for="bgImageInput" class="file-input-label"
+            >Choose Image</label
+          >
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 1rem">
+        <button id="downloadButton" class="btn hidden">Download</button>
+      </div>
+
+      <div id="tutorial">
+        <h2>How to use Raydex Background Remover</h2>
+        <ol>
+          <li>
+            Click the "Choose Image" button to select an image from your device.
+          </li>
+          <li>
+            Once your image is loaded, click the "Remove Background" button.
+          </li>
+          <li>
+            Wait for the AI to process your image and remove the background.
+          </li>
+          <li>
+            Use the color picker or upload a new background image to customize
+            the result.
+          </li>
+          <li>Click the "Download" button to save your edited image.</li>
+        </ol>
+      </div>
+    </div>
+
+    <script>
+      // The JavaScript remains the same as in the previous version
+      const form = document.getElementById("uploadForm");
+      const imageInput = document.getElementById("imageInput");
+      const removeButton = document.getElementById("removeButton");
+      const imagePreview = document.getElementById("imagePreview");
+      const resultWrapper = document.getElementById("resultWrapper");
+      const resultImage = document.getElementById("resultImage");
+      const backgroundControls = document.getElementById("backgroundControls");
+      const bgColorPicker = document.getElementById("bgColorPicker");
+      const colorPreview = document.getElementById("colorPreview");
+      const bgImageInput = document.getElementById("bgImageInput");
+      const downloadButton = document.getElementById("downloadButton");
+      const loader = document.getElementById("loader");
+
+      let removedBackgroundImage = null;
+
+      imageInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            imagePreview.classList.remove("hidden");
+            removeButton.classList.remove("hidden");
+            resultWrapper.classList.add("hidden");
+            backgroundControls.classList.add("hidden");
+            downloadButton.classList.add("hidden");
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append("image", imageInput.files[0]);
+
+        try {
+          loader.classList.remove("hidden");
+          removeButton.disabled = true;
+
+          const response = await fetch("/remove_background", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            removedBackgroundImage = "data:image/png;base64," + data.image;
+            resultImage.src = removedBackgroundImage;
+            resultWrapper.classList.remove("hidden");
+            backgroundControls.classList.remove("hidden");
+            downloadButton.classList.remove("hidden");
+          } else {
+            console.error("Error removing background");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        } finally {
+          loader.classList.add("hidden");
+          removeButton.disabled = false;
+        }
+      });
+
+      bgColorPicker.addEventListener("input", updateBackground);
+      colorPreview.style.backgroundColor = bgColorPicker.value;
+      bgColorPicker.addEventListener("input", function () {
+        colorPreview.style.backgroundColor = this.value;
+      });
+
+      bgImageInput.addEventListener("change", handleBackgroundImage);
+
+      function updateBackground() {
+        if (removedBackgroundImage) {
+          resultWrapper.style.backgroundImage = "none";
+          resultWrapper.style.backgroundColor = bgColorPicker.value;
+        }
+      }
+
+      function handleBackgroundImage(event) {
+        const file = event.target.files[0];
+        if (file && removedBackgroundImage) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            resultWrapper.style.backgroundImage = `url(${e.target.result})`;
+            resultWrapper.style.backgroundSize = "cover";
+            resultWrapper.style.backgroundPosition = "center";
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      downloadButton.addEventListener("click", function () {
+        if (removedBackgroundImage) {
+          const link = document.createElement("a");
+          link.download = "removed_background.png";
+          link.href = removedBackgroundImage;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
+
+      let deferredPrompt;
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Show your custom install button here
+      });
+
+      document.getElementById("installButton").addEventListener("click", () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === "accepted") {
+              console.log("User accepted the A2HS prompt");
+            } else {
+              console.log("User dismissed the A2HS prompt");
+            }
+            deferredPrompt = null;
+          });
+        }
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker.register("/service_worker.js").then(
+            function (registration) {
+              console.log(
+                "ServiceWorker registration successful with scope: ",
+                registration.scope
+              );
+            },
+            function (error) {
+              console.log("ServiceWorker registration failed: ", error);
+            }
+          );
+        });
+      }
+    </script>
+  </body>
+</html>
