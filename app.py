@@ -5,6 +5,7 @@ import io
 import base64
 
 app = Flask(__name__)
+application = app
 
 @app.route('/')
 def index():
@@ -73,3 +74,5 @@ def service_worker():
 if __name__ == '__main__':
     app.run(debug=True)
 
+if __name__ == '__main__':
+    app.run(debug=True)
