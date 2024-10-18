@@ -13,6 +13,7 @@ cache = cachetools.TTLCache(maxsize=100, ttl=3600)
 cache_lock = threading.Lock()
 
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
+application = app
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
